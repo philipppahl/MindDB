@@ -10,9 +10,8 @@ to manage the environment.
 
 ```bash
 cd <path-to-your-project>
-conda create -n course-deck python=3.12
-echo course-deck >> .conda-env
-conda activate course-deck
+conda create -n minddb python=3.12
+conda activate minddb
 pip install -r requirements.txt
 ```
 

@@ -14,11 +14,11 @@ def create_multiple_choice():
         return
 
     question_format = (
-        "{{Question}}\n{{Answer1}}\n{{Answer2}}\n{{Answer3}}\n{{Answer4}}"
+        "{{question}}\n{{answer_1}}\n{{answer_2}}\n{{answer_3}}\n{{answer_4}}"
     )
     answer_format = (
-        "{{FrontSide}}\n{{Question}}\n{{Answer1}}\n{{Answer2}}\n{{Answer3}}\n"
-        "{{Answer4}}\nCorrect Answer: {{CorrectAnswer}}\n{{Explanation}}"
+        "{{FrontSide}}\n{{question}}\n{{answer_1}}\n{{answer_2}}\n{{answer_3}}\n"
+        "{{answer_4}}\nCorrect Answer: {{correct_answer}}\n{{explanation}}"
     )
 
     def create_field(name: str, ord: int) -> dict:
@@ -37,14 +37,14 @@ def create_multiple_choice():
         }
 
     field_names = [
-        "NoteID",
-        "Question",
-        "Answer1",
-        "Answer2",
-        "Answer3",
-        "Answer4",
-        "CorrectAnswer",
-        "Explanation"
+        "note_id",
+        "question",
+        "answer_1",
+        "answer_2",
+        "answer_3",
+        "answer_4",
+        "correct_answer",
+        "explanation"
     ]
 
     # Define the new note type, aka model
