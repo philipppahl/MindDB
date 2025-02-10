@@ -9,9 +9,22 @@ setup(
     author="Your Name",  # You can update this
     packages=find_packages(),
     install_requires=[
-        # Add your dependencies here, for example:
-        # 'requests>=2.25.1',
+        'aiohttp>=3.11.12',
+        'anthropic>=0.42.0',
+        'click>=8.1.8',
+        'instructor>=1.7.2',
+        'jinja2>=3.1.5',
+        'openai>=1.61.1',
+        'pydantic>=2.10.6',
+        'requests>=2.32.3',
+        'typer>=0.15.1',
     ],
+    extras_require={
+        'dev': [
+            'pytest>=8.3.4',
+            'flake8>=7.1.1',
+        ],
+    },
     entry_points={
         'console_scripts': [
             'minddb=bin.cli:main',

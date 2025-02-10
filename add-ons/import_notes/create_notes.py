@@ -1,24 +1,35 @@
+import logging
 from anki.models import NotetypeDict
-from aqt.gui_hooks import main_window_did_init
-from aqt import mw
-from aqt.utils import showInfo
-from aqt.qt import qconnect
 import time
 
+logger = logging.getLogger(__name__)
 
-def create_multiple_choice():
+
+def create_note_type(mw):
     model_manager = mw.col.models
-    existing_model = model_manager.byName("Multiple Choice")
+    existing_model = model_manager.by_name("Multiple Choice")
     if existing_model:
-        showInfo("The 'Multiple Choice' note type already exists.")
         return
+    else:
+        from aqt.qt import QMessageBox
+        reply = QMessageBox.question(
+            None,
+            "Create Note Type",
+            ("I didn't find the 'Multiple Choice' note type.\n"
+             "I'll create it for you."),
+            QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Ok
+        )
+
+        if reply == QMessageBox.StandardButton.Cancel:
+            return
 
     question_format = (
-        "{{question}}\n{{answer_1}}\n{{answer_2}}\n{{answer_3}}\n{{answer_4}}"
+        "{{question}}\n{{answer_a}}\n{{answer_b}}\n{{answer_c}}\n{{answer_d}}"
     )
     answer_format = (
-        "{{FrontSide}}\n{{question}}\n{{answer_1}}\n{{answer_2}}\n{{answer_3}}\n"
-        "{{answer_4}}\nCorrect Answer: {{correct_answer}}\n{{explanation}}"
+        "{{FrontSide}}\n{{question}}\n{{answer_a}}\n{{answer_b}}\n{{answer_c}}"
+        "\n{{answer_d}}\nCorrect Answer: {{correct_answer}}\n{{explanation}}"
     )
 
     def create_field(name: str, ord: int) -> dict:
@@ -39,10 +50,10 @@ def create_multiple_choice():
     field_names = [
         "note_id",
         "question",
-        "answer_1",
-        "answer_2",
-        "answer_3",
-        "answer_4",
+        "answer_a",
+        "answer_b",
+        "answer_c",
+        "answer_d",
         "correct_answer",
         "explanation"
     ]
@@ -91,14 +102,3 @@ def create_multiple_choice():
     # Add the new note type to the collection
     model_manager.add(model)
     model_manager.update(model)
-    showInfo("New note type 'Multiple Choice' has been added.")
-
-
-# Hook into Anki's GUI to add a menu option
-def setup_menu():
-    add_action_msg = "Create Multiple Choice Note Type"
-    action = mw.form.menuTools.addAction(add_action_msg)
-    qconnect(action.triggered, create_multiple_choice)
-
-
-main_window_did_init.append(setup_menu)
