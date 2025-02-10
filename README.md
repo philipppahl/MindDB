@@ -15,12 +15,6 @@ git clone git@github.com:philipppahl/MindDB.git
 cd MindDB
 ```
 
-## Setup Claude
-This version uses Claude, which requires an API key.
-```bash
-export ANTHROPIC_API_KEY='your-api-key-here'
-```
-
 ## Installation
 
 Basic installation:
@@ -31,6 +25,12 @@ pip install .
 For development:
 ```bash
 pip install ".[dev]"
+```
+
+## Setup Claude
+This version uses Claude, which requires an API key.
+```bash
+export ANTHROPIC_API_KEY='your-api-key-here'
 ```
 
 ## Setup Anki
@@ -65,24 +65,24 @@ Let's create and manage some flashcards:
 minddb create \
   --library ./course-materials \
   --deck "Python Basics" \
-  --catalog_path ~/minddb \
+  --catalog_path ./catalog \
   --catalog python_course
 
 # List all decks in your catalog
 minddb decks \
-  --catalog_path ~/minddb \
+  --catalog_path ./catalog \
   --catalog python_course
 
 # View the flashcards in a deck
 minddb notes \
   --deck "Python Basics" \
-  --catalog_path ~/minddb \
+  --catalog_path ./catalog \
   --catalog python_course
 
 # Delete a deck (will prompt for confirmation)
 minddb delete_deck \
   --deck "Python Basics" \
-  --catalog_path ~/minddb \
+  --catalog_path ./catalog \
   --catalog python_course
 ```
 

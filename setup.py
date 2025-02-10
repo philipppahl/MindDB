@@ -27,7 +27,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'minddb=bin.cli:main',
+            'minddb=minddb.cli:main',
         ],
     },
     python_requires='>=3.12',  # Specify minimum Python version
