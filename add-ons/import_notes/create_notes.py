@@ -24,13 +24,48 @@ def create_note_type(mw):
         if reply == QMessageBox.StandardButton.Cancel:
             return
 
-    question_format = (
-        "{{question}}\n{{answer_a}}\n{{answer_b}}\n{{answer_c}}\n{{answer_d}}"
-    )
-    answer_format = (
-        "{{FrontSide}}\n{{question}}\n{{answer_a}}\n{{answer_b}}\n{{answer_c}}"
-        "\n{{answer_d}}\nCorrect Answer: {{correct_answer}}\n{{explanation}}"
-    )
+    question_format = """
+<div class="card">
+    <div class="question">{{question}}</div>
+    <button class="show-answers" onclick="revealAnswers()">Show Answers</button>
+    <div class="answer-options">
+        <p>(a) {{answer_a}}</p>
+        <p>(b) {{answer_b}}</p>
+        <p>(c) {{answer_c}}</p>
+        <p>(d) {{answer_d}}</p>
+    </div>
+</div>
+
+<script>
+    function revealAnswers() {
+        var answers = document.querySelector('.answer-options');
+        var button = document.querySelector('.show-answers');
+
+        if (answers.style.display === 'none' || answers.style.display === '') {
+            answers.style.display = 'block';
+            button.textContent = 'Hide Answers';
+        } else {
+            answers.style.display = 'none';
+            button.textContent = 'Show Answers';
+        }
+    }
+</script>
+"""
+    answer_format = """
+<div class="card">
+    <div class="question">{{question}}</div>
+    <div class="answer-options">
+        <p>(a) {{answer_a}}</p>
+        <p>(b) {{answer_b}}</p>
+        <p>(c) {{answer_c}}</p>
+        <p>(d) {{answer_d}}</p>
+    </div>
+    <div class="explanation">
+        <strong>Correct Answer:</strong> {{correct_answer}}<br>
+        <strong>Explanation:</strong> {{explanation}}
+    </div>
+</div>
+"""
 
     def create_field(name: str, ord: int) -> dict:
         """Create a field definition with default properties."""
@@ -79,11 +114,58 @@ def create_note_type(mw):
             "bsize": 12
         }],
         css="""
-        .explanation { font-style: italic; }
-        .note-id {
-            font-size: 0.8em;
-            color: #666;
-            margin-bottom: 8px;
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            color: #333;
+        }
+
+        .question {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #000;
+        }
+
+        .answer-options {
+            display: none;
+            text-align: left;
+            color: #000;
+        }
+
+        .answer-options p {
+            margin: 5px 0;
+        }
+
+        .show-answers {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            font-style: italic;
+            text-align: left;
+            color: #000;
         }
         """,
         latexPre=(
