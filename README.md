@@ -2,7 +2,7 @@
 MindDB automates the creation of Anki flashcards from course transcripts,
 making learning more efficient.
 
-https://raw.githubusercontent.com/philipppahl/MindDB/gh-pages/minddb_getting_started.mp4
+https://github.com/user-attachments/assets/f1369f9e-8293-4cb7-b8cd-108b8daf66ac
 
 # Setup
 
