@@ -4,6 +4,9 @@ making learning more efficient.
 
 https://github.com/user-attachments/assets/f1369f9e-8293-4cb7-b8cd-108b8daf66ac
 
+# Logbook
+Track the project's progress in the [logbook](https://philipppahl.github.io/MindDB/)
+
 # Setup
 
 ## Install packages
