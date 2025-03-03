@@ -413,6 +413,7 @@ class DB:
         Returns:
             int: ID of the inserted note
         """
+
         conn = self.connect()
         with closing(conn.cursor()) as cursor:
             cursor.execute("""

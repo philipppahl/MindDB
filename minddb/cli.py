@@ -1,6 +1,17 @@
 import logging
 import argparse
+import os.path
 import textwrap
+
+
+def check_catalog_exists(catalog_path, catalog_name):
+    if not os.path.exists(catalog_path):
+        print(f'Catalog path {catalog_path} does not exist')
+        exit(1)
+
+    if not os.path.exists(os.path.join(catalog_path, f'{catalog_name}.db')):
+        print(f'Catalog {catalog_name} does not exist in {catalog_path}')
+        exit(1)
 
 
 def wrap(text, initial_indent='', subsequent_indent='  '):
@@ -15,7 +26,7 @@ def wrap(text, initial_indent='', subsequent_indent='  '):
                         subsequent_indent=subsequent_indent))
 
 
-def get_catalog_props(args):
+def get_catalog_props(args, check=False):
     """Get catalog properties from command line arguments.
 
     Determines the catalog path and name based on provided arguments.
@@ -37,12 +48,18 @@ def get_catalog_props(args):
 
     catalog_name = args.catalog
     if not catalog_name and hasattr(args, 'deck'):
+        deck_name = args.deck
+        for char in ['_', '-', ':']:
+            deck_name = deck_name.replace(char, ' ')
         catalog_name = ''.join(
-            word.capitalize() for word in args.deck.split()
+            (word[0].upper() + word[1:]) for word in deck_name.split()
         )
 
     if not catalog_name:
         raise ValueError('Please provide a name for the catalog')
+
+    if check:
+        check_catalog_exists(catalog_path, catalog_name)
 
     return catalog_path, catalog_name
 
@@ -57,7 +74,8 @@ def add_catalog_args(parser):
                         help='Verbose output')
 
 
-def main():
+
+async def async_main():
     description = ('MindDB automates the creation of Anki flashcards from '
                    'course transcripts.')
 
@@ -114,16 +132,17 @@ def main():
         import minddb.mindnote
         import minddb.storage
 
-        minddb.storage.setup(*get_catalog_props(args))
+        minddb.storage.setup(*get_catalog_props(args, check=False))
         processor = minddb.mindnote.Processor(args.library)
-        processor.create(args.deck)
+        await processor.create(args.deck)
 
         minddb.storage.close_catalog()
 
     if args.command == 'delete_deck':
         import minddb.storage
 
-        minddb.storage.setup(*get_catalog_props(args))
+        minddb.storage.setup(*get_catalog_props(args, check=True))
+
         catalog = minddb.storage.get_catalog()
 
         if args.deck not in catalog.list_decks():
@@ -153,7 +172,7 @@ def main():
 
         import minddb.storage
 
-        minddb.storage.setup(*get_catalog_props(args))
+        minddb.storage.setup(*get_catalog_props(args, check=True))
         catalog = minddb.storage.get_catalog()
 
         if deck_name not in catalog.list_decks():
@@ -188,8 +207,9 @@ def main():
 
         import minddb.storage
 
-        catalog_path, catalog_name = get_catalog_props(args)
+        catalog_path, catalog_name = get_catalog_props(args, check=True)
         minddb.storage.setup(catalog_path, catalog_name)
+
         decks = minddb.storage.get_catalog().list_decks()
 
         print(f'Catalog: {catalog_name}')
@@ -201,10 +221,16 @@ def main():
         minddb.storage.close_catalog()
 
 
+def main():
+    import asyncio
+    asyncio.run(async_main())
+
+
 if __name__ == '__main__':
     """
     Main entry point for the script.
     Usage:
     >>> minddb --help
     """
-    main()
+    import asyncio
+    asyncio.run(main())
